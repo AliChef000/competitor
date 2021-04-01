@@ -47,6 +47,8 @@
           </div>
           <div id="uni_trade"></div>
         </div>
+       </div>
+       <div class="row" style="margin-top:20px; margin-bottom:20px">
         <div class="col-md-12">
           <div class="d-flex justify-content-center" style="font-weight: bold;">
             SushiSwap Daily Trading Volume
@@ -89,7 +91,7 @@ query($dateFormat:String!)
       Total_USD: tradeAmount(calculate: sum, in: USD)
       Total_trades: count(uniq: txs)
       Total_fee: gasValue(calculate: sum, in: USD)
-      date:date{date(format:$dateFormat)}
+       date:date{dt:date(format:$dateFormat)}
     }
   }
 }
@@ -108,11 +110,12 @@ query($dateFormat:String!)
   "seriesType": "area"
  },
  "dataOptions": [
- {
-              title: 
-              {label:"Date",
-                type: "date"},
-              path: "date.date",
+  {
+              title: {
+                label: "Date",
+                type: "date",
+              },
+              path: "date.dt",
             },
   {
    "title": "Trade Volume USD",
@@ -140,7 +143,7 @@ query($dateFormat:String!)
       Total_USD: tradeAmount(calculate: sum, in: USD)
       Total_trades: count(uniq: txs)
       Total_fee: gasValue(calculate: sum, in: USD)
-      date:date{date(format:$dateFormat)}
+ date:date{dt:date(format:$dateFormat)}
     }
   }
 }
@@ -161,10 +164,11 @@ query($dateFormat:String!)
  },
  "dataOptions": [
  {
-              title: 
-              {label:"Date",
-                type: "date"},
-              path: "date.date",
+              title: {
+                label: "Date",
+                type: "date",
+              },
+              path: "date.dt",
             },
   {
    "title": "Trade Volume USD",
