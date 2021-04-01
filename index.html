@@ -79,7 +79,7 @@
     widgets.init('https://graphql.bitquery.io', '', {locale: 'en', theme: 'light'});
     var query = new widgets.query(`
 
-query($dateFormat:String)
+query($dateFormat:String!)
 {
   ethereum(network: ethereum) {
     dexTrades(
@@ -129,7 +129,7 @@ query($dateFormat:String)
     (function(){
     widgets.init('https://graphql.bitquery.io', '', {locale: 'en', theme: 'light'});
     var query = new widgets.query(`
-query($dateFormat:String)
+query($dateFormat:String!)
 
 {
   ethereum(network: ethereum) {
