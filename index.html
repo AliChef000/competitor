@@ -96,7 +96,7 @@ query($dateFormat:String!)
 
 
 `);
-    var wdts = new widgets.chart('#uni_trade', query, 'ethereum.dexTrades', {
+    var wdts = new widgets.chartByTime('#uni_trade', query, 'ethereum.dexTrades', {
  "title": "Trading Volume",
  "chartOptions": {
   "vAxes": {
@@ -148,7 +148,7 @@ query($dateFormat:String!)
 
 
 `);
-    var wdts = new widgets.chart('#sushi_trade', query, 'ethereum.dexTrades', {
+    var wdts = new widgets.chartByTime('#sushi_trade', query, 'ethereum.dexTrades', {
  "title": "Trading Volume",
  "chartOptions": {
   "vAxes": {
