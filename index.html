@@ -1,1 +1,176 @@
-<h1>competitor!</h1>
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Competitor Analysis Dashboard</title>
+    <link
+      rel="stylesheet"
+      media="all"
+      href="https://cdn.jsdelivr.net/gh/bitquery/widgets@v1.3.8/dist/assets/css/widgets.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+      crossorigin="anonymous"
+    />
+    <script src="https://cdn.jsdelivr.net/gh/bitquery/widgets@v1.3.8/dist/widgets.js"></script>
+    <script
+      src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+      integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+      integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+      integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+      crossorigin="anonymous"
+    ></script>
+    <style></style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="row" style="margin-top:20px; margin-bottom:20px">
+        <div class="col">
+          <div class="d-flex justify-content-center" style="font-weight: bold;">
+            Competitors Analysis
+          </div>
+        </div>
+      </div>
+      <div class="row" style="margin-top:20px; margin-bottom:20px">
+        <div class="col-md-12">
+          <div class="d-flex justify-content-center" style="font-weight: bold;">
+            UniSwap Daily Trading Volume
+          </div>
+          <div id="uni_trade"></div>
+        </div>
+        <div class="col-md-12">
+          <div class="d-flex justify-content-center" style="font-weight: bold;">
+            SushiSwap Daily Trading Volume
+          </div>
+
+          <div id="sushi_trade"></div>
+        </div>
+      </div>
+      <div class="row" style="margin-top:20px; margin-bottom:20px">
+        <div class="col">
+          <div class="d-flex justify-content-end">
+            <a href="https://explorer.bitquery.io/bsc/smart_contract/0xbcfccbde45ce874adcb698cc183debcf17952812">
+              <img
+                src="https://lh3.googleusercontent.com/gLUJmZaNklu79UkRHR5oHP5eOP6NiRBXoP7mk36LHul-41QqZuh2NVYV_sSN6JLczaPmLO5ZVqZPNFMtPw4JhVR78ctqmJGADPyOlp8pG6r_4J1c4UbQ0aQcA2zneUikWJ3kThGX"
+                style="height: 30px;"
+            /></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+
+  <script>
+     (function(){
+    widgets.init('https://graphql.bitquery.io', '', {locale: 'en', theme: 'light'});
+    var query = new widgets.query(`
+
+
+{
+  ethereum(network: ethereum) {
+    dexTrades(
+      date: {since: "2020-01-01", till: "2020-12-31"}
+      exchangeName:{is:"Uniswap"}
+    ) {
+      Total_USD: tradeAmount(calculate: sum, in: USD)
+      Total_trades: count(uniq: txs)
+      Total_fee: gasValue(calculate: sum, in: USD)
+      date{date}
+    }
+  }
+}
+
+
+`);
+    var wdts = new widgets.chart('#uni_trade', query, 'ethereum.dexTrades', {
+ "title": "Trading Volume",
+ "chartOptions": {
+  "vAxes": {
+   "0": {
+    "title": "Trade Volume",
+    "scaleType": "linear"
+   },
+  },
+  "seriesType": "area"
+ },
+ "dataOptions": [
+ {
+              title: 
+              {label:"Date",
+                type: "date"},
+              path: "date.date",
+            },
+  {
+   "title": "Trade Volume",
+   "path": "Total_USD"
+  }
+ 
+ ]
+});
+    query.request({dateFormat:"%Y-%m-%d"
+  });
+    })();
+  </script>
+  <script>
+    (function(){
+    widgets.init('https://graphql.bitquery.io', '', {locale: 'en', theme: 'light'});
+    var query = new widgets.query(`
+
+
+{
+  ethereum(network: ethereum) {
+    dexTrades(
+      date: {since: "2020-01-01", till: "2020-12-31"}
+      exchangeName:{is:"SushiSwap"}
+    ) {
+      Total_USD: tradeAmount(calculate: sum, in: USD)
+      Total_trades: count(uniq: txs)
+      Total_fee: gasValue(calculate: sum, in: USD)
+      date{date}
+    }
+  }
+}
+
+
+
+`);
+    var wdts = new widgets.chart('#sushi_trade', query, 'ethereum.dexTrades', {
+ "title": "Trading Volume",
+ "chartOptions": {
+  "vAxes": {
+   "0": {
+    "title": "Trade Volume",
+    "scaleType": "linear"
+   },
+  },
+  "seriesType": "area"
+ },
+ "dataOptions": [
+ {
+              title: 
+              {label:"Date",
+                type: "date"},
+              path: "date.date",
+            },
+  {
+   "title": "Trade Volume",
+   "path": "Total_USD"
+  }
+ 
+ ]
+});
+    query.request({dateFormat:"%Y-%m-%d"
+  });
+    })();
+  </script>
+ 
+</html>
