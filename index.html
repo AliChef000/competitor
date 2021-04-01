@@ -83,7 +83,7 @@ query($dateFormat:String!)
 {
   ethereum(network: ethereum) {
     dexTrades(
-      date: {since: "2020-01-01", till: "2020-12-31"}
+      date: {since: "2020-01-01"}
       exchangeName:{is:"Uniswap"}
     ) {
       Total_USD: tradeAmount(calculate: sum, in: USD)
@@ -134,7 +134,7 @@ query($dateFormat:String!)
 {
   ethereum(network: ethereum) {
     dexTrades(
-      date: {since: "2020-01-01", till: "2020-12-31"}
+      date: {since: "2020-01-01"}
       exchangeName:{is:"SushiSwap"}
     ) {
       Total_USD: tradeAmount(calculate: sum, in: USD)
