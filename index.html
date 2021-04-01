@@ -74,7 +74,7 @@
     widgets.init('https://graphql.bitquery.io', '', {locale: 'en', theme: 'light'});
     var query = new widgets.query(`
 
-
+query($dateFormat:String)
 {
   ethereum(network: ethereum) {
     dexTrades(
@@ -84,7 +84,7 @@
       Total_USD: tradeAmount(calculate: sum, in: USD)
       Total_trades: count(uniq: txs)
       Total_fee: gasValue(calculate: sum, in: USD)
-      date{date}
+      date:date{date(format:$dateFormat)}
     }
   }
 }
@@ -124,7 +124,7 @@
     (function(){
     widgets.init('https://graphql.bitquery.io', '', {locale: 'en', theme: 'light'});
     var query = new widgets.query(`
-
+query($dateFormat:String)
 
 {
   ethereum(network: ethereum) {
@@ -135,7 +135,7 @@
       Total_USD: tradeAmount(calculate: sum, in: USD)
       Total_trades: count(uniq: txs)
       Total_fee: gasValue(calculate: sum, in: USD)
-      date{date}
+      date:date{date(format:$dateFormat)}
     }
   }
 }
