@@ -57,6 +57,14 @@
           <div id="eth_address"></div>
         </div>
       </div>
+     <div class="row" style="margin-top:20px; margin-bottom:20px">
+       <div class="col-md-12">
+         <div class="d-flex justify-content-center" style="font-weight: bold;">
+            BSC Major AMM Trading Volume
+          </div>
+          <div id="bsc_trade"></div>
+        </div>
+      </div>
       <div class="row" style="margin-top:20px; margin-bottom:20px">
         <div class="col">
           <div class="d-flex justify-content-end">
@@ -303,5 +311,99 @@ SushiSwap:count(uniq:senders,exchangeAddress:{is:"0xc0aee478e3658e2610c5f7a4a2e1
     query.request({"unit":"week"});
     })();
   </script>
- 
+ <script>
+	 (function(){
+    widgets.init('https://graphql.bitquery.io', '', {locale: 'en', theme: 'light'});
+    var query = new widgets.query(`
+
+query($unit:DateInterval!)
+{ethereum(network:bsc){
+  dexTrades(date:{since:"2021-01-01"}
+    options:{asc:"date.startOfInterval"}
+  exchangeAddress:{in:["0xbcfccbde45ce874adcb698cc183debcf17952812"]}){
+    date{startOfInterval(unit:$unit)}
+Pancake:tradeAmount(in:USD)
+  }
+}}
+
+`);
+    var wdts = new widgets.chartByTime('#bsc_trade', query, 'ethereum.dexTrades', {
+ "title": "BSC Major AMM Trading Volume",
+ "chartOptions": {
+  "vAxes": {
+   "0": {
+    "title": "Trading Volume (USD)",
+    "scaleType": "log"
+   },
+   "1": {
+    "title": "Active Address",
+    "scaleType": "linear"
+   },
+  },
+  "series": {
+   "0": {
+    "color": "#ffc107",
+    "barWidth":"2",
+    "pointsVisible":true,
+    "pointShape":"round",
+    "pointSize":"3",
+    "targetAxisIndex": 0,
+    "type":"line"
+   },
+   "1": {
+    "color": "#28a745",
+    "lineWidth":"2",
+    "pointsVisible":true,
+    "pointShape":"diamond",
+    "pointSize":"3",
+    targetAxisIndex: 0,
+    "type":"line"
+   },
+    "2": {
+    "color": "#e76f51",
+    "lineWidth":"2",
+    "pointsVisible":true,
+    "pointShape":"diamond",
+    "pointSize":"3",
+    targetAxisIndex: 0,
+    "type":"line"
+   },
+    "3": {
+    "color": "#392f5a",
+    "lineWidth":"2",
+    "pointsVisible":true,
+    "pointShape":"diamond",
+    "pointSize":"3",
+    targetAxisIndex: 0,
+    "type":"line"
+   },
+    "4": {
+    "color": "#2a9d8f",
+    "lineWidth":"2",
+    "pointsVisible":true,
+    "pointShape":"diamond",
+    "pointSize":"3",
+    targetAxisIndex: 0,
+    "type":"line"
+   },
+  },
+  "seriesType": "line"
+ },
+ "dataOptions": [
+  {
+    title:"Date",
+    type: "datetime",
+		path: "date.startOfInterval",
+            },
+  
+  {
+   "title": "Pancake Trading Volume",
+   "path": "Pancake",
+  },
+  
+ ]
+});
+    query.request({"unit":"week"});
+    })();
+	</script>
 </html>
