@@ -43,9 +43,9 @@
       <div class="row" style="margin-top:20px; margin-bottom:20px">
         <div class="col-md-12">
           <div class="d-flex justify-content-center" style="font-weight: bold;">
-            UniSwap Daily Trading Volume
+            BSC Major AMM Active Address
           </div>
-          <div id="uni_trade"></div>
+          <div id="bsc_address"></div>
         </div>
        </div>
        <div class="row" style="margin-top:20px; margin-bottom:20px">
@@ -81,51 +81,112 @@
     widgets.init('https://graphql.bitquery.io', '', {locale: 'en', theme: 'light'});
     var query = new widgets.query(`
 
-query($dateFormat:String!)
-{
-  ethereum(network: ethereum) {
-    dexTrades(
-      date: {since: "2020-01-01"}
-      exchangeName:{is:"Uniswap"}
-    ) {
-      Total_USD: tradeAmount(calculate: sum, in: USD)
-      Total_trades: count(uniq: txs)
-      Total_fee: gasValue(calculate: sum, in: USD)
-       date:date{dt:date(format:$dateFormat)}
-    }
+query($unit:DateInterval!)
+{ethereum(network:bsc){
+  dexTrades(date:{since:"2021-01-01"}
+    options:{asc:"date.startOfInterval"}){
+    date{startOfInterval(unit:$unit)}
+ Pancake:count(uniq:senders,exchangeAddress:{is:"0xbcfccbde45ce874adcb698cc183debcf17952812"})
+SwapLiquidity:count(uniq:senders,exchangeAddress:{is:"0x553990f2cba90272390f62c5bdb1681ffc899675"})
+ BakerySwap:count(uniq:senders,exchangeAddress:{is:"0x01bf7c66c6bd861915cdaae475042d3c4bae16a7"})
+    ApeFactory:count(uniq:senders,exchangeAddress:{is:"0x0841bd0b734e4f5853f0dd8d7ea041c241fb0da6"})
+    StreetSwap:count(uniq:senders,exchangeAddress:{is:"0xac653ce27e04c6ac565fd87f18128ad33ca03ba2"})
   }
-}
-
+}}
 
 `);
-    var wdts = new widgets.chartByTime('#uni_trade', query, 'ethereum.dexTrades', {
- "title": "Trading Volume",
+    var wdts = new widgets.chartByTime('#bsc_address', query, 'ethereum.dexTrades', {
+ "title": "BSC Major AMM Active Address",
  "chartOptions": {
   "vAxes": {
    "0": {
-    "title": "Trade Volume",
+    "title": "Active Address",
     "scaleType": "log"
    },
+   "1": {
+    "title": "Active Address",
+    "scaleType": "linear"
+   },
   },
-  "seriesType": "area"
+  "series": {
+   "0": {
+    "color": "#ffc107",
+    "barWidth":"2",
+    "pointsVisible":true,
+    "pointShape":"round",
+    "pointSize":"3",
+    "targetAxisIndex": 0,
+    "type":"line"
+   },
+   "1": {
+    "color": "#28a745",
+    "lineWidth":"2",
+    "pointsVisible":true,
+    "pointShape":"diamond",
+    "pointSize":"3",
+    targetAxisIndex: 0,
+    "type":"line"
+   },
+    "2": {
+    "color": "#e76f51",
+    "lineWidth":"2",
+    "pointsVisible":true,
+    "pointShape":"diamond",
+    "pointSize":"3",
+    targetAxisIndex: 0,
+    "type":"line"
+   },
+    "3": {
+    "color": "#392f5a",
+    "lineWidth":"2",
+    "pointsVisible":true,
+    "pointShape":"diamond",
+    "pointSize":"3",
+    targetAxisIndex: 0,
+    "type":"line"
+   },
+    "4": {
+    "color": "#2a9d8f",
+    "lineWidth":"2",
+    "pointsVisible":true,
+    "pointShape":"diamond",
+    "pointSize":"3",
+    targetAxisIndex: 0,
+    "type":"line"
+   },
+  },
+  "seriesType": "line"
  },
  "dataOptions": [
   {
-              title: {
-                label: "Date",
-                type: "date",
-              },
-              path: "date.dt",
+    title:"Date",
+    type: "datetime",
+		path: "date.startOfInterval",
             },
+  
   {
-   "title": "Trade Volume USD",
-   "path": "Total_USD"
-  }
- 
+   "title": "Pancake Active Address",
+   "path": "Pancake",
+  },
+  {
+   "title": "SwapLiquidity Active Address",
+   "path": "SwapLiquidity"
+  },
+   {
+   "title": "BakerySwap Active Address",
+   "path": "BakerySwap"
+  },
+   {
+   "title": "ApeFactory Active Address",
+   "path": "ApeFactory"
+  },
+   {
+   "title": "StreetSwap Active Address",
+   "path": "StreetSwap"
+  },
  ]
 });
-    query.request({dateFormat:"%Y-%m-%d"
-  });
+    query.request({"unit":"week"});
     })();
   </script>
   <script>
