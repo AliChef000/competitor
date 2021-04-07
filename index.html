@@ -65,6 +65,14 @@
           <div id="bsc_trade"></div>
         </div>
       </div>
+     <div class="row" style="margin-top:20px; margin-bottom:20px">
+       <div class="col-md-12">
+         <div class="d-flex justify-content-center" style="font-weight: bold;">
+            Ethereum Major AMM Trading Volume
+          </div>
+          <div id="eth_trade"></div>
+        </div>
+      </div>
       <div class="row" style="margin-top:20px; margin-bottom:20px">
         <div class="col">
           <div class="d-flex justify-content-end">
@@ -344,7 +352,7 @@ Pancake:tradeAmount(in:USD)
     "pointShape":"round",
     "pointSize":"3",
     "targetAxisIndex": 0,
-    "type":"line"
+    "type":"bars"
    },
  
   },
@@ -366,5 +374,121 @@ Pancake:tradeAmount(in:USD)
 });
     query.request({"unit":"week"});
     })();
+	</script>
+	<script>		
+    (function(){
+    widgets.init('https://graphql.bitquery.io', 'BQY8IPItkNCP0iK8BqvmhSWV1pxpFqrB', {locale: 'en', theme: 'light'});
+    var query = new widgets.query(`
+        query($unit:DateInterval!)
+{ethereum(network:ethereum){
+  dexTrades(date:{since:"2021-01-01"}
+    options:{asc:"date.startOfInterval"}
+  exchangeAddress:{in:[
+    "0x5c69bee701ef814a2b6a3edd4b1652cb9cc5aa6f",
+"0xbcfccbde45ce874adcb698cc183debcf17952812",
+"0xc0aee478e3658e2610c5f7a4a2e1777ce9e4f2ac",
+"0xc447fcaf1def19a583f97b3620627bf69c05b5fb",
+"0x9424b1412450d0f8fc2255faf6046b98213b76bd",
+"0x2f9ec37d6ccfff1cab21733bdadede11c823ccb0",
+"0x55662e225a3376759c24331a9aed764f8f0c9fbb",
+"0x6dae6ae227438378c117821c51fd61661faa8893",
+"0x7c66550c9c730b6fdd4c03bc2e73c5462c5f7acc",
+"0xb9e29984fe50602e7a619662ebed4f90d93824c7"
+  ]}){
+    date{startOfInterval(unit:$unit)}
+    exchange{name}
+tradeAmount(in:USD)
+  }
+}}`);
+    var wdts = new widgets.pivotChart('#eth_trade', query, 'ethereum.dexTrades', {
+ "title": "Ethereum Major AMM Trade",
+ "chartOptions": {
+  "vAxes": {
+   "0": {
+    "title": "Trading Volume",
+    scaleType:"log",
+    "viewWindow": {
+     "min": 0
+    }
+   }
+  },
+  "hAxis": {
+   "title": "Date",
+   "format": "dd/M/yy",
+   "gridlines": {
+    "units": {
+     "years": {
+      "format": [
+       "yyyy"
+      ]
+     },
+     "months": {
+      "format": [
+       "M/yy"
+      ]
+     },
+     "days": {
+      "format": [
+       "dd"
+      ]
+     }
+    }
+   },
+   "minorGridlines": {
+    "units": {
+     "years": {
+      "format": [
+       "yyyy"
+      ]
+     },
+     "months": {
+      "format": [
+       "MM"
+      ]
+     },
+     "days": {
+      "format": [
+       "dd"
+      ]
+     }
+    },
+    "color": "grey"
+   }
+  },
+  "bar": {
+   "groupWidth": "80%"
+  },
+  "isStacked": true
+ },
+ "cols": [
+  {
+   "title": "Exchange",
+   "path": "exchange.name",
+   "metrics": [
+    {
+     "title": "Trading Volume",
+     "path": "tradeAmount"
+    }
+   ]
+  }
+ ],
+ "rows": [
+  {
+   "title": {
+   type:"datetime",
+   },
+   "path": "date.startOfInterval"
+  }
+ ],
+ "sort": {
+  "metric": "Trading Volume",
+  "direction": "asc",
+  "axis": "col"
+ },
+ "limit": {}
+});
+    query.request({unit:"week"});
+    })();
+
 	</script>
 </html>
