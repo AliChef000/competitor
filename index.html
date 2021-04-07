@@ -51,10 +51,10 @@
        <div class="row" style="margin-top:20px; margin-bottom:20px">
         <div class="col-md-12">
           <div class="d-flex justify-content-center" style="font-weight: bold;">
-            SushiSwap Daily Trading Volume
+            Ethereum Major AMM Active Address
           </div>
 
-          <div id="sushi_trade"></div>
+          <div id="eth_address"></div>
         </div>
       </div>
       <div class="row" style="margin-top:20px; margin-bottom:20px">
@@ -100,7 +100,7 @@ SwapLiquidity:count(uniq:senders,exchangeAddress:{is:"0x553990f2cba90272390f62c5
  "chartOptions": {
   "vAxes": {
    "0": {
-    "title": "Active Address",
+    "title": "Log Active Address",
     "scaleType": "log"
    },
    "1": {
@@ -190,56 +190,117 @@ SwapLiquidity:count(uniq:senders,exchangeAddress:{is:"0x553990f2cba90272390f62c5
     })();
   </script>
   <script>
-    (function(){
+(function(){
     widgets.init('https://graphql.bitquery.io', '', {locale: 'en', theme: 'light'});
     var query = new widgets.query(`
-query($dateFormat:String!)
 
-{
-  ethereum(network: ethereum) {
-    dexTrades(
-      date: {since: "2020-01-01"}
-      exchangeName:{is:"SushiSwap"}
-    ) {
-      Total_USD: tradeAmount(calculate: sum, in: USD)
-      Total_trades: count(uniq: txs)
-      Total_fee: gasValue(calculate: sum, in: USD)
- date:date{dt:date(format:$dateFormat)}
-    }
+query($unit:DateInterval!)
+{ethereum(network:ethereum){
+  dexTrades(date:{since:"2021-01-01"}
+  ){
+    date{startOfInterval(unit:$unit)}
+    UniSwap:count(uniq:senders,exchangeAddress:{is:"0x5c69bee701ef814a2b6a3edd4b1652cb9cc5aa6f"})
+SushiSwap:count(uniq:senders,exchangeAddress:{is:"0xc0aee478e3658e2610c5f7a4a2e1777ce9e4f2ac"})
+ Balancer:count(uniq:senders,exchangeAddress:{is:"0x9424b1412450d0f8fc2255faf6046b98213b76bd"})
+    inch:count(uniq:senders,exchangeAddress:{is:"0x55662e225a3376759c24331a9aed764f8f0c9fbb"})
+    Bancor:count(uniq:senders,exchangeAddress:{is:"0x2f9ec37d6ccfff1cab21733bdadede11c823ccb0"})
+  
   }
-}
-
-
+}}
 
 `);
-    var wdts = new widgets.chartByTime('#sushi_trade', query, 'ethereum.dexTrades', {
- "title": "Trading Volume",
+    var wdts = new widgets.chartByTime('#eth_address', query, 'ethereum.dexTrades', {
+ "title": "ETH Major AMM Active Address",
  "chartOptions": {
   "vAxes": {
    "0": {
-    "title": "Trade Volume",
+    "title": "Log Active Address",
+    "scaleType": "log"
+   },
+   "1": {
+    "title": "Active Address",
     "scaleType": "linear"
    },
   },
-  "seriesType": "area"
+  "series": {
+   "0": {
+    "color": "#ffc107",
+    "barWidth":"2",
+    "pointsVisible":true,
+    "pointShape":"round",
+    "pointSize":"3",
+    "targetAxisIndex": 0,
+    "type":"line"
+   },
+   "1": {
+    "color": "#28a745",
+    "lineWidth":"2",
+    "pointsVisible":true,
+    "pointShape":"diamond",
+    "pointSize":"3",
+    targetAxisIndex: 0,
+    "type":"line"
+   },
+    "2": {
+    "color": "#e76f51",
+    "lineWidth":"2",
+    "pointsVisible":true,
+    "pointShape":"diamond",
+    "pointSize":"3",
+    targetAxisIndex: 0,
+    "type":"line"
+   },
+    "3": {
+    "color": "#392f5a",
+    "lineWidth":"2",
+    "pointsVisible":true,
+    "pointShape":"diamond",
+    "pointSize":"3",
+    targetAxisIndex: 0,
+    "type":"line"
+   },
+    "4": {
+    "color": "#2a9d8f",
+    "lineWidth":"2",
+    "pointsVisible":true,
+    "pointShape":"diamond",
+    "pointSize":"3",
+    targetAxisIndex: 0,
+    "type":"line"
+   },
+  },
+  "seriesType": "line"
  },
  "dataOptions": [
- {
-              title: {
-                label: "Date",
-                type: "date",
-              },
-              path: "date.dt",
-            },
   {
-   "title": "Trade Volume USD",
-   "path": "Total_USD"
-  }
- 
+    title:"Date",
+    type: "datetime",
+		path: "date.startOfInterval",
+            },
+  
+  {
+   "title": "UniSwap Active Address",
+   "path": "UniSwap",
+  },
+  {
+   "title": "SushiSwap Active Address",
+   "path": "SushiSwap"
+  },
+   {
+   "title": "Balancer Active Address",
+   "path": "Balancer"
+  },
+   {
+   "title": "inch Active Address",
+   "path": "inch"
+  },
+   {
+   "title": "Bancor Active Address",
+   "path": "Bancor"
+  },
  ]
 });
-    query.request({dateFormat:"%Y-%m-%d"
-  });
+    query.request({"unit":"week"});
     })();
   </script>
  
