@@ -102,7 +102,7 @@ query($unit:DateInterval!)
   dexTrades(date:{since:"2021-01-01"}
     options:{asc:"date.startOfInterval"}){
     date{startOfInterval(unit:$unit)}
- Pancake:count(uniq:senders,exchangeAddress:{in:["0x877Fe7F4e22e21bE397Cd9364fAFd4aF4E15Edb6","0xbcfccbde45ce874adcb698cc183debcf17952812"})
+ Pancake:count(uniq:senders,exchangeAddress:{in:["0x877Fe7F4e22e21bE397Cd9364fAFd4aF4E15Edb6","0xbcfccbde45ce874adcb698cc183debcf17952812"]})
 SwapLiquidity:count(uniq:senders,exchangeAddress:{is:"0x553990f2cba90272390f62c5bdb1681ffc899675"})
  BakerySwap:count(uniq:senders,exchangeAddress:{is:"0x01bf7c66c6bd861915cdaae475042d3c4bae16a7"})
     ApeFactory:count(uniq:senders,exchangeAddress:{is:"0x0841bd0b734e4f5853f0dd8d7ea041c241fb0da6"})
