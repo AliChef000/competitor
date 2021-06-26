@@ -36,7 +36,7 @@
       <div class="row" style="margin-top:20px; margin-bottom:20px">
         <div class="col">
           <div class="d-flex justify-content-center"  style="color: #E67E22;font-size: x-large; font-weight: bold;" >
-              Competitors Analysis Dashboard (V1+V2)
+              Competitors Analysis Dashboard (V1+V2) ~5/20/2021
           </div>
         </div>
       </div>
@@ -51,7 +51,7 @@
        <div class="row" style="margin-top:20px; margin-bottom:20px">
         <div class="col-md-12">
           <div class="d-flex justify-content-center" style="font-weight: bold;">
-            Ethereum Major AMM Active Address
+            Ethereum Top 1- AMM by Active Address
           </div>
 
           <div id="eth_address"></div>
@@ -142,113 +142,42 @@ address{sc:address}}
     widgets.init('https://graphql.bitquery.io', '', {locale: 'en', theme: 'light'});
     var query = new widgets.query(`
 
-query($unit:DateInterval!)
+
+
 {ethereum(network:ethereum){
-  dexTrades(date:{since:"2021-01-01"}
-  ){
-    date{startOfInterval(unit:$unit)}
-    UniSwap:count(uniq:senders,exchangeAddress:{is:"0x5c69bee701ef814a2b6a3edd4b1652cb9cc5aa6f"})
-SushiSwap:count(uniq:senders,exchangeAddress:{is:"0xc0aee478e3658e2610c5f7a4a2e1777ce9e4f2ac"})
- Balancer:count(uniq:senders,exchangeAddress:{is:"0x9424b1412450d0f8fc2255faf6046b98213b76bd"})
-    inch:count(uniq:senders,exchangeAddress:{is:"0x55662e225a3376759c24331a9aed764f8f0c9fbb"})
-    Bancor:count(uniq:senders,exchangeAddress:{is:"0x2f9ec37d6ccfff1cab21733bdadede11c823ccb0"})
-  
+  dexTrades(date:{since:"2021-05-20"}
+    options:{desc:"count",limit:10}){
+exchange{name
+address{sc:address}}
+    tradeAmount(in:USD)
+    count(uniq:senders)
+    
   }
 }}
 
 `);
-    var wdts = new widgets.chartByTime('#eth_address', query, 'ethereum.dexTrades', {
+    var wdts = new widgets.table('#eth_address', query, 'ethereum.dexTrades', {
  "title": "ETH Major AMM Active Address",
- "chartOptions": {
-  "vAxes": {
-   "0": {
-    "title": "Log Active Address",
-    "scaleType": "log"
-   },
-   "1": {
-    "title": "Active Address",
-    "scaleType": "linear"
-   },
-  },
-  "series": {
-   "0": {
-    "color": "#ffc107",
-    "barWidth":"2",
-    "pointsVisible":true,
-    "pointShape":"round",
-    "pointSize":"3",
-    "targetAxisIndex": 0,
-    "type":"line"
-   },
-   "1": {
-    "color": "#28a745",
-    "lineWidth":"2",
-    "pointsVisible":true,
-    "pointShape":"diamond",
-    "pointSize":"3",
-    targetAxisIndex: 0,
-    "type":"line"
-   },
-    "2": {
-    "color": "#e76f51",
-    "lineWidth":"2",
-    "pointsVisible":true,
-    "pointShape":"diamond",
-    "pointSize":"3",
-    targetAxisIndex: 0,
-    "type":"line"
-   },
-    "3": {
-    "color": "#392f5a",
-    "lineWidth":"2",
-    "pointsVisible":true,
-    "pointShape":"diamond",
-    "pointSize":"3",
-    targetAxisIndex: 0,
-    "type":"line"
-   },
-    "4": {
-    "color": "#2a9d8f",
-    "lineWidth":"2",
-    "pointsVisible":true,
-    "pointShape":"diamond",
-    "pointSize":"3",
-    targetAxisIndex: 0,
-    "type":"line"
-   },
-  },
-  "seriesType": "line"
- },
  "dataOptions": [
-  {
-    title:"Date",
-    type: "datetime",
-		path: "date.startOfInterval",
-            },
-  
-  {
-   "title": "UniSwap Active Address",
-   "path": "UniSwap",
+ {
+   "title": "Exchange Name",
+   "path": "exchange.name",
   },
   {
-   "title": "SushiSwap Active Address",
-   "path": "SushiSwap"
+   "title": "Exchange Address",
+   "path": "exchange.address.sc"
   },
    {
-   "title": "Balancer Active Address",
-   "path": "Balancer"
+   "title": "Volume USD",
+   "path": "tradeAmount"
   },
    {
-   "title": "inch Active Address",
-   "path": "inch"
-  },
-   {
-   "title": "Bancor Active Address",
-   "path": "Bancor"
+   "title": "Active Address",
+   "path": "count"
   },
  ]
 });
-    query.request({"unit":"week"});
+    query.request({});
     })();
   </script>
  <script>
@@ -256,170 +185,83 @@ SushiSwap:count(uniq:senders,exchangeAddress:{is:"0xc0aee478e3658e2610c5f7a4a2e1
     widgets.init('https://graphql.bitquery.io', '', {locale: 'en', theme: 'light'});
     var query = new widgets.query(`
 
-query($unit:DateInterval!)
 {ethereum(network:bsc){
-  dexTrades(date:{since:"2021-01-01"}
-    options:{asc:"date.startOfInterval"}
-  exchangeAddress:{in:["0xbcfccbde45ce874adcb698cc183debcf17952812","0x877Fe7F4e22e21bE397Cd9364fAFd4aF4E15Edb6"]}){
-    date{startOfInterval(unit:$unit)}
-Pancake:tradeAmount(in:USD)
+  dexTrades(date:{since:"2021-05-20"}
+    options:{desc:"tradeAmount",limit:10}){
+exchange{name
+address{sc:address}}
+    tradeAmount(in:USD)
+    count(uniq:senders)
+    
   }
 }}
 
 `);
-    var wdts = new widgets.chartByTime('#bsc_trade', query, 'ethereum.dexTrades', {
+    var wdts = new widgets.table('#bsc_trade', query, 'ethereum.dexTrades', {
  "title": "BSC Major AMM Trading Volume",
- "chartOptions": {
-  "vAxes": {
-   "0": {
-    "title": "Trading Volume (USD)",
-    "scaleType": "linear"
-   },
-  },
-  "series": {
-   "0": {
-    "color": "#ffc107",
-    "barWidth":"2",
-    "pointsVisible":true,
-    "pointShape":"round",
-    "pointSize":"3",
-    "targetAxisIndex": 0,
-    "type":"bars"
-   },
  
-  },
-  "seriesType": "line"
- },
  "dataOptions": [
+{
+   "title": "Exchange Name",
+   "path": "exchange.name",
+  },
   {
-    title:"Date",
-    type: "datetime",
-		path: "date.startOfInterval",
-            },
-  
-  {
-   "title": "Pancake Trading Volume",
-   "path": "Pancake",
+   "title": "Exchange Address",
+   "path": "exchange.address.sc"
+  },
+   {
+   "title": "Volume USD",
+   "path": "tradeAmount"
+  },
+   {
+   "title": "Active Address",
+   "path": "count"
   },
   
  ]
 });
-    query.request({"unit":"week"});
+    query.request({});
     })();
 	</script>
 	<script>		
     (function(){
     widgets.init('https://graphql.bitquery.io', 'BQY8IPItkNCP0iK8BqvmhSWV1pxpFqrB', {locale: 'en', theme: 'light'});
     var query = new widgets.query(`
-        query($unit:DateInterval!)
+   
+
 {ethereum(network:ethereum){
-  dexTrades(date:{since:"2021-01-01"}
-    options:{asc:"date.startOfInterval"}
-  exchangeAddress:{in:[
-    "0x5c69bee701ef814a2b6a3edd4b1652cb9cc5aa6f",
-"0xbcfccbde45ce874adcb698cc183debcf17952812",
-"0xc0aee478e3658e2610c5f7a4a2e1777ce9e4f2ac",
-"0xc447fcaf1def19a583f97b3620627bf69c05b5fb",
-"0x9424b1412450d0f8fc2255faf6046b98213b76bd",
-"0x2f9ec37d6ccfff1cab21733bdadede11c823ccb0",
-"0x55662e225a3376759c24331a9aed764f8f0c9fbb",
-"0x6dae6ae227438378c117821c51fd61661faa8893",
-"0x7c66550c9c730b6fdd4c03bc2e73c5462c5f7acc",
-"0xb9e29984fe50602e7a619662ebed4f90d93824c7"
-  ]}){
-    date{startOfInterval(unit:$unit)}
-    exchange{name}
-tradeAmount(in:USD)
+  dexTrades(date:{since:"2021-05-20"}
+    options:{desc:"tradeAmount",limit:10}){
+exchange{name
+address{sc:address}}
+    tradeAmount(in:USD)
+    count(uniq:senders)
+    
   }
 }}`);
-    var wdts = new widgets.pivotChart('#eth_trade', query, 'ethereum.dexTrades', {
+    var wdts = new widgets.table('#eth_trade', query, 'ethereum.dexTrades', {
  "title": "Ethereum Major AMM Trade",
- "chartOptions": {
-  "vAxes": {
-   "0": {
-    "title": "Trading Volume",
-    scaleType:"log",
-    "viewWindow": {
-     "min": 0
-    }
-   }
-  },
-  "hAxis": {
-   "title": "Date",
-   "format": "dd/M/yy",
-   "gridlines": {
-    "units": {
-     "years": {
-      "format": [
-       "yyyy"
-      ]
-     },
-     "months": {
-      "format": [
-       "M/yy"
-      ]
-     },
-     "days": {
-      "format": [
-       "dd"
-      ]
-     }
-    }
-   },
-   "minorGridlines": {
-    "units": {
-     "years": {
-      "format": [
-       "yyyy"
-      ]
-     },
-     "months": {
-      "format": [
-       "MM"
-      ]
-     },
-     "days": {
-      "format": [
-       "dd"
-      ]
-     }
-    },
-    "color": "grey"
-   }
-  },
-  "bar": {
-   "groupWidth": "80%"
-  },
-  "isStacked": true
- },
- "cols": [
-  {
-   "title": "Exchange",
+
+  "dataOptions": [
+{
+   "title": "Exchange Name",
    "path": "exchange.name",
-   "metrics": [
-    {
-     "title": "Trading Volume",
-     "path": "tradeAmount"
-    }
-   ]
-  }
- ],
- "rows": [
+  },
   {
-   "title": {
-   type:"datetime",
-   },
-   "path": "date.startOfInterval"
-  }
- ],
- "sort": {
-  "metric": "Trading Volume",
-  "direction": "asc",
-  "axis": "col"
- },
- "limit": {}
+   "title": "Exchange Address",
+   "path": "exchange.address.sc"
+  },
+   {
+   "title": "Volume USD",
+   "path": "tradeAmount"
+  },
+   {
+   "title": "Active Address",
+   "path": "count"
+  },
+ 
 });
-    query.request({unit:"week"});
+    query.request({});
     })();
 
 	</script>
